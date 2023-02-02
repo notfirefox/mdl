@@ -8,7 +8,7 @@ yt-dlp \
   --embed-thumbnail \
   --restrict-filenames \
   --output "%(title)s.%(ext)s" \
-  "<url>"
+  "$1"
 
 # This only works for openSUSE
 # TODO: Make it work for other distros
