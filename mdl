@@ -7,7 +7,6 @@ then
     exit
 fi
 
-
 # Ensure that the user has installed the required dependencies
 if ! command -v yt-dlp &> /dev/null
 then
@@ -16,10 +15,22 @@ then
 fi
 
 # Ensure that the user has installed the required dependencies
-if ! command -v file-rename &> /dev/null
+if [ -f /etc/os-release ]
 then
-    echo "file-rename could not be found"
-    exit
+  if grep -q openSUSE /etc/os-release
+  then
+    if ! command -v file-rename &> /dev/null
+    then
+        echo "file-rename could not be found"
+        exit
+    fi
+  else
+    if ! command -v rename &> /dev/null
+    then
+        echo "rename could not be found"
+        exit
+    fi
+  fi
 fi
 
 # Download the playlist
@@ -35,6 +46,14 @@ yt-dlp \
   "$1"
 
 # Rename the files
-# Currently only supported on openSUSE
-file-rename 'y/A-Z/a-z/' *.m4a
-file-rename 'y/_/-/' *.m4a
+if [ -f /etc/os-release ]
+then
+  if grep -q openSUSE /etc/os-release
+  then
+    file-rename 'y/A-Z/a-z/' *.m4a
+    file-rename 'y/_/-/' *.m4a
+  else
+    rename 'y/A-Z/a-z/' *.m4a
+    rename 'y/_/-/' *.m4a
+  fi
+fi
