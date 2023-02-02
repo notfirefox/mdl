@@ -29,5 +29,9 @@ yt-dlp \
 # Rename the files
 for file in *.m4a
 do
-  mv --no-clobber "$file" "$(echo "$file" | tr 'A-Z' 'a-z' | tr '_' '-')"
+  name=$(echo "$file" | tr 'A-Z' 'a-z' | tr '_' '-')
+  if [ "$name" != "$file" ]
+  then
+    mv "$file" "$name"
+  fi
 done
