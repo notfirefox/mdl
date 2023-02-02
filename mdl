@@ -1,5 +1,11 @@
 #!/bin/sh
 
+#
+# mdl - Download music from YouTube Music
+# Currently supports openSUSE and Arch Linux
+# Requires yt-dlp, file-rename (openSUSE), and perl-rename (Arch Linux)
+#
+
 # Ensure that the user has provided a URL
 if [ "$#" -ne 1 ]
 then
@@ -15,21 +21,19 @@ then
 fi
 
 # Ensure that the user has installed the required dependencies
-if [ -f /etc/os-release ]
+if command -v zypper &> /dev/null
 then
-  if grep -q openSUSE /etc/os-release
+  if ! command -v file-rename &> /dev/null
   then
-    if ! command -v file-rename &> /dev/null
-    then
-        echo "file-rename could not be found"
-        exit
-    fi
-  else
-    if ! command -v rename &> /dev/null
-    then
-        echo "rename could not be found"
-        exit
-    fi
+      echo "file-rename could not be found"
+      exit
+  fi
+elif command -v pacman &> /dev/null
+then
+  if ! command -v perl-rename &> /dev/null
+  then
+      echo "perl-rename could not be found"
+      exit
   fi
 fi
 
@@ -46,14 +50,12 @@ yt-dlp \
   "$1"
 
 # Rename the files
-if [ -f /etc/os-release ]
+if command -v zypper &> /dev/null
 then
-  if grep -q openSUSE /etc/os-release
-  then
-    file-rename 'y/A-Z/a-z/' *.m4a
-    file-rename 'y/_/-/' *.m4a
-  else
-    rename 'y/A-Z/a-z/' *.m4a
-    rename 'y/_/-/' *.m4a
-  fi
+  file-rename 'y/A-Z/a-z/' *.m4a
+  file-rename 'y/_/-/' *.m4a
+elif command -v pacman &> /dev/null
+then
+  perl-rename 'y/A-Z/a-z/' *.m4a
+  perl-rename 'y/_/-/' *.m4a
 fi
