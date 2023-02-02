@@ -3,15 +3,15 @@
 # Ensure that the user has provided a URL
 if [ "$#" -ne 1 ]
 then
-    echo "Usage: mdl <url>"
-    exit
+  echo "Usage: mdl <url>"
+  exit
 fi
 
 # Ensure that the user has installed the required dependencies
 if ! command -v yt-dlp &> /dev/null
 then
-    echo "yt-dlp could not be found"
-    exit
+  echo "yt-dlp could not be found"
+  exit
 fi
 
 # Download the playlist
