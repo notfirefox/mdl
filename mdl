@@ -1,11 +1,5 @@
 #!/bin/sh
 
-#
-# mdl - Download music from YouTube Music
-# Currently supports openSUSE and Arch Linux
-# Requires yt-dlp, file-rename (openSUSE), and perl-rename (Arch Linux)
-#
-
 # Ensure that the user has provided a URL
 if [ "$#" -ne 1 ]
 then
@@ -18,23 +12,6 @@ if ! command -v yt-dlp &> /dev/null
 then
     echo "yt-dlp could not be found"
     exit
-fi
-
-# Ensure that the user has installed the required dependencies
-if command -v zypper &> /dev/null
-then
-  if ! command -v file-rename &> /dev/null
-  then
-      echo "file-rename could not be found"
-      exit
-  fi
-elif command -v pacman &> /dev/null
-then
-  if ! command -v perl-rename &> /dev/null
-  then
-      echo "perl-rename could not be found"
-      exit
-  fi
 fi
 
 # Download the playlist
@@ -50,12 +27,7 @@ yt-dlp \
   "$1"
 
 # Rename the files
-if command -v zypper &> /dev/null
-then
-  file-rename 'y/A-Z/a-z/' *.m4a
-  file-rename 'y/_/-/' *.m4a
-elif command -v pacman &> /dev/null
-then
-  perl-rename 'y/A-Z/a-z/' *.m4a
-  perl-rename 'y/_/-/' *.m4a
-fi
+for file in *.m4a
+do
+  mv "$file" "$(echo "$file" | tr 'A-Z' 'a-z' | tr '_' '-')"
+done
