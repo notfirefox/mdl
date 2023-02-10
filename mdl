@@ -8,7 +8,7 @@ then
 fi
 
 # Ensure that the user has installed the required dependencies
-if ! command -v yt-dlp &> /dev/null
+if ! command -v yt-dlp > /dev/null 2>&1
 then
   echo "yt-dlp could not be found"
   exit
@@ -29,7 +29,7 @@ yt-dlp \
 # Rename the files
 for file in *.m4a
 do
-  name=$(echo "$file" | tr 'A-Z' 'a-z' | tr '_' '-')
+  name=$(echo "$file" | tr '[:upper:]' '[:lower:]' | tr '_' '-')
   if [ "$name" != "$file" ]
   then
     mv "$file" "$name"
